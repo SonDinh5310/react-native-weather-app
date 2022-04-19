@@ -1,5 +1,5 @@
-import { StatusBar } from 'expo-status-bar';
-import React, { useState, useEffect } from 'react';
+import { StatusBar } from "expo-status-bar";
+import React, { useState, useEffect } from "react";
 import {
     StyleSheet,
     Text,
@@ -7,30 +7,42 @@ import {
     ScrollView,
     TextInput,
     Image,
-} from 'react-native';
-import * as Location from 'expo-location';
+    Dimensions,
+} from "react-native";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faWind, faDroplet, faGauge } from "@fortawesome/free-solid-svg-icons";
+import CustomInfo from "./src/components/CustomInfo";
+import Loading from "./src/components/Loading";
+import Forecast from "./src/components/Forecast";
 
-const axios = require('axios');
+const axios = require("axios");
 
 export default function App() {
-    const [location, setLocation] = useState('');
+    const [location, setLocation] = useState("");
+    const [forecast, setForecast] = useState("");
+    const [isLoading, setIsLoading] = useState(null);
     const [data, setData] = useState(null);
-    const API_KEY = 'cb7bdeb262be30cedd993a22bcd0be75';
+    const API_KEY = "cb7bdeb262be30cedd993a22bcd0be75";
 
     const callApi = async () => {
-        const res = await axios.get(
+        setIsLoading(true);
+        const resToday = await axios.get(
             `https://api.openweathermap.org/data/2.5/weather?q=${location}&units=metric&appid=${API_KEY}`
         );
-        console.log(res.data);
-
-        setData(res.data);
+        const resForecast = await axios.get(
+            `https://api.openweathermap.org/data/2.5/forecast?q=${location}&units=metric&cnt=5&appid=${API_KEY}`
+        );
+        console.log(resToday.data);
+        // console.log(resForecast.data);
+        setData(resToday.data);
+        setForecast(resForecast.data.list);
+        setIsLoading(false);
     };
 
-    // callApi();
     const onSubmit = () => {
         console.log(location);
         callApi();
-        setLocation('');
+        setLocation("");
     };
 
     return (
@@ -40,10 +52,22 @@ export default function App() {
                 value={location}
                 onChangeText={(value) => setLocation(value)}
                 onSubmitEditing={() => onSubmit()}
+                style={{
+                    width: "100%",
+                    padding: 10,
+                    fontSize: 16,
+                    border: "1px solid black",
+                    borderRadius: 10,
+                }}
             ></TextInput>
-            {data && (
-                <View>
-                    <View style={{ alignItems: 'center' }}>
+            {isLoading && <Loading />}
+            {data && !isLoading && (
+                <View style={{ width: "100%", marginTop: 20 }}>
+                    <View
+                        style={{
+                            alignItems: "center",
+                        }}
+                    >
                         <Text style={{ fontSize: 40 }}>{data.name}</Text>
                         <Text style={{ fontSize: 60, marginTop: -15 }}>
                             {data.main.temp}°
@@ -51,15 +75,15 @@ export default function App() {
                         <Text
                             style={{
                                 fontSize: 20,
-                                textTransform: 'capitalize',
+                                textTransform: "capitalize",
                             }}
                         >
                             {data.weather[0].description}
                         </Text>
                         <View
                             style={{
-                                flexDirection: 'row',
-                                justifyContent: 'space-between',
+                                flexDirection: "row",
+                                justifyContent: "space-between",
                             }}
                         >
                             <Text style={{ marginRight: 10, fontSize: 16 }}>
@@ -69,12 +93,37 @@ export default function App() {
                                 L: {data.main.temp_max}°
                             </Text>
                         </View>
-                        <View>
-                            <View>
-                                <Text>Wind</Text>
-                                <Text>{data.wind.speed} m/s</Text>
-                            </View>
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                justifyContent: "space-between",
+                                width: "100%",
+                                marginTop: 20,
+                                padding: 10,
+                                border: "1px solid black",
+                                borderRadius: 10,
+                            }}
+                        >
+                            <CustomInfo
+                                icon={faWind}
+                                infoTitle="Wind"
+                                infoData={data.wind.speed}
+                                unit="m/s"
+                            ></CustomInfo>
+                            <CustomInfo
+                                icon={faDroplet}
+                                infoTitle="Humidity"
+                                infoData={data.main.humidity}
+                                unit="%"
+                            ></CustomInfo>
+                            <CustomInfo
+                                icon={faGauge}
+                                infoTitle="Pressure"
+                                infoData={data.main.pressure}
+                                unit="hPa"
+                            ></CustomInfo>
                         </View>
+                        <Forecast forecastData={forecast}></Forecast>
                     </View>
                 </View>
             )}
@@ -85,9 +134,9 @@ export default function App() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
+        backgroundColor: "#fff",
+        alignItems: "center",
         paddingTop: 20,
-        paddingHorizontal: 10,
+        paddingHorizontal: 30,
     },
 });
