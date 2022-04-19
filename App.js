@@ -10,7 +10,7 @@ export default function App() {
 
     const callApi = async () => {
         const res = await axios.get(
-            `https://api.openweathermap.org/data/2.5/weather?q=hanoi&units=metric&appid=${API_KEY}`
+            `https://api.openweathermap.org/data/2.5/weather?q=${location}&units=metric&appid=${API_KEY}`
         );
         console.log(res.data);
     };
