@@ -32,11 +32,7 @@ export default function App() {
     };
 
     return (
-        <ScrollView
-            contentContainerStyle={styles.container}
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-        >
+        <View style={styles.container}>
             <TextInput
                 placeholder="Enter a city name"
                 value={location}
@@ -47,7 +43,11 @@ export default function App() {
             {isLoading && <Loading />}
             {errorMsg && <CustomError message={errorMsg} />}
             {!errorMsg && data && !isLoading && (
-                <View style={[fullWidth, mt20]}>
+                <ScrollView
+                    style={[fullWidth, mt20]}
+                    showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false}
+                >
                     <View>
                         <WeatherMain data={data}></WeatherMain>
 
@@ -55,9 +55,9 @@ export default function App() {
 
                         <Forecast forecastData={forecast}></Forecast>
                     </View>
-                </View>
+                </ScrollView>
             )}
-        </ScrollView>
+        </View>
     );
 }
 
