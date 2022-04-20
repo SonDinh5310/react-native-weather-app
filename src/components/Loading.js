@@ -1,10 +1,10 @@
-import React from "react";
-import { View, Text } from "react-native";
-
+import React from 'react';
+import { View, ActivityIndicator } from 'react-native';
+import { commonStyles } from './CommonStyles';
 function Loading() {
     return (
-        <View>
-            <Text>Loading ...</Text>
+        <View style={commonStyles.mt20}>
+            <ActivityIndicator size="large" color="black" />
         </View>
     );
 }

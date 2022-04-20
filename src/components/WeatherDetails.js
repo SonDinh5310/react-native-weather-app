@@ -1,37 +1,30 @@
-import React from "react";
-import { View } from "react-native";
-import CustomInfo from "./CustomInfo";
-import { faWind, faDroplet, faGauge } from "@fortawesome/free-solid-svg-icons";
+import React from 'react';
+import { View } from 'react-native';
+import { commonStyles } from './CommonStyles';
+import { faWind, faDroplet, faGauge } from '@fortawesome/free-solid-svg-icons';
+import CustomInfo from './CustomInfo';
 
-function WeatherDetails() {
+function WeatherDetails({ data }) {
+    const { rowBetween, mt20, cardPadding, border, fullWidth } = commonStyles;
+    const { wind, main } = data;
     return (
-        <View
-            style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                width: "100%",
-                marginTop: 20,
-                padding: 10,
-                border: "1px solid black",
-                borderRadius: 10,
-            }}
-        >
+        <View style={[rowBetween, mt20, cardPadding, border, fullWidth]}>
             <CustomInfo
                 icon={faWind}
                 infoTitle="Wind"
-                infoData={data.wind.speed}
+                infoData={wind.speed}
                 unit="m/s"
             ></CustomInfo>
             <CustomInfo
                 icon={faDroplet}
                 infoTitle="Humidity"
-                infoData={data.main.humidity}
+                infoData={main.humidity}
                 unit="%"
             ></CustomInfo>
             <CustomInfo
                 icon={faGauge}
                 infoTitle="Pressure"
-                infoData={data.main.pressure}
+                infoData={main.pressure}
                 unit="hPa"
             ></CustomInfo>
         </View>
