@@ -32,7 +32,11 @@ export default function App() {
     };
 
     return (
-        <View style={styles.container}>
+        <ScrollView
+            contentContainerStyle={styles.container}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+        >
             <TextInput
                 placeholder="Enter a city name"
                 value={location}
@@ -43,7 +47,7 @@ export default function App() {
             {isLoading && <Loading />}
             {errorMsg && <CustomError message={errorMsg} />}
             {!errorMsg && data && !isLoading && (
-                <ScrollView style={[fullWidth, mt20]}>
+                <View style={[fullWidth, mt20]}>
                     <View>
                         <WeatherMain data={data}></WeatherMain>
 
@@ -51,9 +55,9 @@ export default function App() {
 
                         <Forecast forecastData={forecast}></Forecast>
                     </View>
-                </ScrollView>
+                </View>
             )}
-        </View>
+        </ScrollView>
     );
 }
 
@@ -62,7 +66,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fbfbf8',
         alignItems: 'center',
-        paddingTop: 50,
+        paddingTop: 30,
         paddingHorizontal: 30,
     },
 });
